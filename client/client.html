@@ -6,7 +6,49 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    const handleResponse = (xhr) =>{
+      const type=xhr.getResponseHeader('content-type');
 
+      const content = document.querySelector("#content");
+      const h1=document.createElement('h1');
+      const p=document.createElement('p');
+
+      //For JSON response
+      if(type==='application/json'){
+        const obj=JSON.parse(xhr.response);
+        ht.textContent=`${obj.title}`;
+        p.textContent=`${obj.message}`;
+      }
+
+      //For XML response
+      if(type=='text/xml'){
+        const title=xhr.responseXML.querySelector('title').textContent;
+        const message=xhr.responseXML.querySelector('message').textContentl
+        h1.textContent=`${title}`;
+        p.textContent=`${title}`;
+      }
+
+      content.appendChild(h1);
+      content.appendChild(p);
+    };
+
+    const requestUpdate = (e,page,type)=>{
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET',page);
+      xhr.setRequestHeader("Accept",type);
+      xhr.onload = () => handleResponse(xhr);
+      xhr.send();
+    }
+
+    const init = () =>{
+      const page = document.querySelector('#page');
+      const type = document.querySelector('#type');
+
+      const getInfo = (e) =>requestUpdate(e,page,type);
+
+      const submit=document.querySelector('#submit');
+      submit.addEventListener(getInfo);
+    }
   </script>
 </head>
 <body>
