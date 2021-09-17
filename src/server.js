@@ -7,6 +7,7 @@ const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const urlStruct = {
   '/': responseHandler.getIndex,
+  '/style.css': responseHandler.getCSS,
   '/success': responseHandler.getSuccess,
   '/badRequest': responseHandler.getBadRequest,
   '/unauthorized': responseHandler.getUnauthorized,
@@ -24,7 +25,7 @@ const onRequest = (request, response) => {
   if (urlStruct[parsedUrl.pathname]) {
     urlStruct[parsedUrl.pathname](request, response, acceptedTypes);
   } else {
-    urlStruct.notFound(request, response);
+    urlStruct.notFound(request, response,acceptedTypes);
   }
 };
 

@@ -6,26 +6,31 @@
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script type="text/babel">
+    const h1=document.createElement('h1');
+    const p=document.createElement('p');
+
     const handleResponse = (xhr) =>{
       const type=xhr.getResponseHeader('content-type');
 
       const content = document.querySelector("#content");
-      const h1=document.createElement('h1');
-      const p=document.createElement('p');
+
+      h1.textContent="";
+      p.textContent="";
 
       //For JSON response
       if(type==='application/json'){
         const obj=JSON.parse(xhr.response);
-        ht.textContent=`${obj.title}`;
+        h1.textContent=`${obj.title}`;
         p.textContent=`${obj.message}`;
       }
-
-      //For XML response
-      if(type=='text/xml'){
+      else if(type==='text/xml'){
         const title=xhr.responseXML.querySelector('title').textContent;
-        const message=xhr.responseXML.querySelector('message').textContentl
+        const message=xhr.responseXML.querySelector('message').textContent;
         h1.textContent=`${title}`;
-        p.textContent=`${title}`;
+        p.textContent=`${message}`;
+      }
+      else{
+        console.dir("not working");
       }
 
       content.appendChild(h1);
@@ -33,12 +38,13 @@
     };
 
     const requestUpdate = (e,page,type)=>{
+      console.dir("HI");
       const xhr = new XMLHttpRequest();
-      xhr.open('GET',page);
-      xhr.setRequestHeader("Accept",type);
+      xhr.open('GET',page.value);
+      xhr.setRequestHeader("Accept",type.value);
       xhr.onload = () => handleResponse(xhr);
       xhr.send();
-    }
+    };
 
     const init = () =>{
       const page = document.querySelector('#page');
@@ -46,9 +52,11 @@
 
       const getInfo = (e) =>requestUpdate(e,page,type);
 
-      const submit=document.querySelector('#submit');
-      submit.addEventListener(getInfo);
-    }
+      const submit=document.querySelector('#send');
+      submit.addEventListener('click',getInfo);
+    };
+
+    window.onload=init;
   </script>
 </head>
 <body>
