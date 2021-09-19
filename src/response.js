@@ -13,6 +13,9 @@ const respondXML = (request, response, content, status, type) => {
   let responseXML = '<response>';
   responseXML = `${responseXML}<title>${content.title}</title>`;
   responseXML = `${responseXML}<message>${content.message}</message>`;
+  if (content.id) {
+    responseXML = `${responseXML}<id>${content.id}</id>`;
+  }
   responseXML = `${responseXML}</response>`;
 
   response.writeHead(status, { 'Content-Type': type });
@@ -53,7 +56,7 @@ const getBadRequest = (request, response, type, params) => {
 
   if (!params.valid || params.valid !== 'true') {
     content.message = 'Message: Missing valid query parameter set to true';
-    content.id='badRequest';
+    content.id = 'badRequest';
     statusCode = 400;
   }
 
@@ -76,7 +79,7 @@ const getUnauthorized = (request, response, type, params) => {
 
   if (!params.loggedIn || params.loggedIn !== 'true') {
     content.message = 'Message: Missing loggedIn query parameter set to true';
-    content.id='unauthorized';
+    content.id = 'unauthorized';
     statusCode = 401;
   }
 
@@ -145,7 +148,7 @@ const notFound = (request, response, type) => {
   const content = {
     title: 'Resource Not Found',
     message: 'Message: The page you were looking for was not found.',
-    id:'notFound',
+    id: 'notFound',
   };
 
   // XML
